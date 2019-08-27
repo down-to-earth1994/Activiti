@@ -345,13 +345,18 @@ public class ProcessRuntimeImpl implements ProcessRuntime {
     }
 
     @Override
+    @Transactional
     public void receive(MessagePayload messagePayload) {
-        throw new UnsupportedOperationException("method not yet implemented");
+        eventPublisher.publishEvent(messagePayload);
     }
 
     @Override
     public void start(MessagePayload messagePayload) {
-        throw new UnsupportedOperationException("method not yet implemented");
+        String messageName = messagePayload.getName();
+        String businessKey = messagePayload.getBusinessKey();
+        Map<String, Object> variables = messagePayload.getVariables();
+        
+        runtimeService.startProcessInstanceByMessage(messageName, businessKey, variables);
     }
 
 }
